@@ -57,7 +57,8 @@ class SudokuBoard:
 
     def checkRules(self, num, space):
         """
-            This method checks if a number can be placed in certain space.
+            This method checks if a number can be placed in certain space following the
+            Sudoku Rules.
 
             Params
             ------
@@ -95,7 +96,7 @@ class SudokuBoard:
         # return True.
         return True
     
-    def solve(self):
+    def solve(self, initialCell=None):
         """
             This method implements a recursive BackTracking algorithm to solve
             the Sudoku Board.
@@ -106,17 +107,24 @@ class SudokuBoard:
             - False is the puzzle hasn't solution.
         """
 
-        # Checking if there are empty spaces. If no empty spaces remains, then return True beacuse
-        # it was possible to solve the puzzle.
-        availableSpace = self.findEmptySpace()
-        if not availableSpace:
-            return True
+        availableSpace = None
+
+        if not initialCell:
+            # Checking if there are empty spaces. If no empty spaces remains, then return True beacuse
+            # it was possible to solve the puzzle.
+            availableSpace = self.findEmptySpace()
+            if not availableSpace:
+                return True
+        else:
+            availableSpace = initialCell
 
         # If there are an empty space, then try to fit the space with all valid numbers (1-9) according to
         # the Sudoku rules and try to solve it since this state. If there are no solution 
         # from the current configuration, then the next valid number is tried in the current space.
-        for n in range(1, 10):
+        validNumbers = list(range(1, 10))
 
+        while validNumbers:
+            n = validNumbers.pop(random.randrange(len(validNumbers)))
             # Checking if is possible to set the number according to Sudoku rules. If we can't, 
             # then continue to the next iteration to try with the next number
             if self.checkRules(n, availableSpace):
@@ -170,42 +178,17 @@ class SudokuBoard:
                     # only once in the box, it is removed when it is selected. 
                     self.board[row][col] = validNumbers.pop(random.randrange(len(validNumbers)))
         
-        # Populate the rest of the board with a recursive method
-        self.__fillMissingCells()
-    
-
-    def __fillMissingCells(self):
-        """
-            This is a helper method used in generateFullBoard() method. It fill the Sudoku board
-            given a board with the three diagonal boxes already filled.
-        """
-
-        # Nested For loops to iterate the board
-        for row in range(len(self.board)):
-            for col in range(len(self.board)):
-                # Looking for an empty space
-                if self.board[row][col] == 0:
-                    # If an empty space was found, get a random number (1-9) and check
-                    # if we can put n in that cell
-                    n = random.randint(1, 9)
-
-                    if self.checkRules(n, (row, col)):
-                        # If we could put n in the empty space, then we check if the puzzle is 
-                        # still solvable
-                        self.board[row][col] = n
-
-                        # If the puzzle is not solvable, then reset the space as an empty space
-                        # and continue trying to fill all the missing cells recursively
-                        if not self.solve():
-                            self.board[row][col] = 0
-                            self.__fillMissingCells()
-                        
-
+        # Populate the rest of the cells solving the board
+        self.solve()
 
     def findNumberOfSolutions(self):
         """
-            This method finds the number of solutions the board has when we reset a cell to an
-            empty state.
+            This method finds the number of solutions that a non-completely filled board has.
+
+            Returns
+            -------
+            - List of <str> objects with length 81. Each of them represents a different 
+              solution.
         """
 
         # Integer to store the number of empty spaces
@@ -219,24 +202,39 @@ class SudokuBoard:
                 if self.board[row][col] == 0:
                     numberOfEmptySpaces += 1
 
-        
-        for i in range(1, numberOfEmptySpaces+1):
+        # For loop to solve the board from every single empty space found
+        for i in range(numberOfEmptySpaces):
+            # Copy of the original board
             board_copy = copy.deepcopy(self)
-
+            # Getting the current empty space
             row, col = self.__findEmptySpaceToFindNumberOfSolutions(board_copy.board, i)
-            board_copy_solution = board_copy.__solveToFindNumberOfSolutions(row, col)
-
-            list_of_solutions.append(self.boardToCode(input_board=board_copy_solution))
-
+            # Solving the puzzle from the current empty space
+            board_copy.solve(initialCell=(row, col))
+            # Storing the current solution
+            list_of_solutions.append(board_copy.boardToString())
+        
+        # Return the number of unique solutions
         return list(set(list_of_solutions))
     
+
     def __findEmptySpaceToFindNumberOfSolutions(self, board, h):
         """
-            This is a helper method used by findNumberOfSolutions() method.
+            This is a helper method used by findNumberOfSolutions() method. Here, we look
+            for a specific empty space in a specific board. 
+
+            Params
+            ------
+            board: Copy of self.board object with a specific configuration. In this board we
+                   will search the empty space.
+            h: <int> object representing the h-th empty cell that we are looking for.
         """
-        k = 1
+        # Aux. variable to search the h-th empty space
+        k = 0
+
+        # Nested for loop to iterate the board
         for row in range(len(board)):
             for col in range(len(board[row])):
+                # If an empty space is found, check if is the h-th cell that we are looking for
                 if board[row][col] == 0:
                     if k == h:
                         return (row, col)
@@ -245,33 +243,10 @@ class SudokuBoard:
 
         return False
 
-    
-    def __solveToFindNumberOfSolutions(self, row, col):
-        """
-            This is a helper method used by findNumberOfSolutions() method. It solves a board
-            starting from a given cell using recursion.
-
-            Params
-            ------
-            - row: Row where the initial cell is located.
-            - col: Column where the initial cell is located.
-        """
-        for n in range(1,10):
-            if self.checkRules(n, (row,col)):
-                self.board[row][col] = n
-
-                if self.solve():
-                    return True
-                
-                self.board[row][col] = 0
-            
-            return False
-
-
-    def getBoard(self):
-        return self.board
-
     def printBoard(self):
+        """
+            This method prints the board with the standard Sudoku format.
+        """
         for i in range(9):
             if i%3 == 0 and i != 0:
                 print("- - - - - - - - - - - - - ")
@@ -285,21 +260,44 @@ class SudokuBoard:
     
 
     def boardToString(self):
-       string = "".join([str(col) for row in self.board for col in row])
-       return string
+        """
+            This method converts the board in a string.
 
+            Returns
+            -------
+            - A <str> object which stores the board.
+        """
+        string = "".join([str(col) for row in self.board for col in row])
+        return string
+    
+    def generatePartiallyFilledBoard(self, emptySpaces=0):
+        # Generating the full board and storing it
+        self.generateFullBoard()
+        fullBoard = copy.deepcopy(self)
+
+        # We erase "emptySpaces" number of cells randomly always checking that 
+        # the number of solutions is 1.
+        emptiedCells = 0
+        while emptiedCells < emptySpaces:
+            row = random.randint(0, 8)
+            col = random.randint(0, 8)
+
+            if self.board[row][col] != 0:
+                n = self.board[row][col]
+                self.board[row][col] = 0
+
+                if len(self.findNumberOfSolutions()) != 1:
+                    self.board[row][col] = n
+                    continue
+                
+                emptiedCells += 1
         
+        # returns the solved board and the unsolved board
+        return fullBoard, self
 
-if __name__ == "__main__":
-    board = "000015370058703400347028000510670004600800057800009010469000002081300000730200190"
-    b = SudokuBoard(board=board)
-    # b.solve()
-    # b.printBoard()
-    # print("\n\n")
 
-    b.generateFullBoard()
-    b.printBoard()
-    print(b.boardToString())
+
+
 
 
 
