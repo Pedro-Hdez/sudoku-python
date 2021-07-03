@@ -130,7 +130,7 @@ def generateNewBoardCase():
         print("\nFILLED BOARD")
         filled.printBoard()
     else:
-        filled = b.generateGameBoard()
+        filled, _ = b.generateGameBoard()
         print("\nFILLED BOARD")
         filled.printBoard()
     
