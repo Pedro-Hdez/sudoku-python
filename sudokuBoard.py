@@ -54,9 +54,20 @@ class SudokuBoard:
                     print(self.board[i][j])
                 else:
                     print(str(self.board[i][j]) + " ", end="")
-
-
     
+
+    def boardAsString(self):
+        """
+            This method converts the board in a string.
+
+            Returns
+            -------
+            - A <str> object which stores the board.
+        """
+        string = "".join([str(col) for row in self.board for col in row])
+        return string
+
+
     def __findEmptySpace(self, board=None, emptySpace=None):
         """
             This method finds an empty space in a board. Empty spaces are represented 
@@ -278,18 +289,6 @@ class SudokuBoard:
         
         # Return the number of unique solutions
         return list(set(list_of_solutions))
-    
-
-    def boardAsString(self):
-        """
-            This method converts the board in a string.
-
-            Returns
-            -------
-            - A <str> object which stores the board.
-        """
-        string = "".join([str(col) for row in self.board for col in row])
-        return string
 
     
     def generateGameBoard(self, emptySpaces=0):
@@ -304,9 +303,8 @@ class SudokuBoard:
             
             Returns
             -------
-            - If emptySpaces > 0 returns two <SudokuBoard> objects. The first one containing the 
+            - Two <SudokuBoard> objects. The first one containing the 
               solved board; the last one is the partially filled board.
-            - If emptySpaces == 0 returns the <SudokuBoard> object which contains the solved board.
         """
         # Generating the full board and storing it
         self.__generateFullBoard()
@@ -333,4 +331,4 @@ class SudokuBoard:
         if emptySpaces > 0:
             return fullBoard, self
         
-        return self
+        return self, None
