@@ -22,6 +22,7 @@ class SudokuBoard:
                 for j in range(0,9):
                     self.board[i][j] = int(board[(i*9) + j])
     
+
     def __resetBoard(self):
         """
             This private functions resets the board state. This is, fill it with 0's
@@ -37,6 +38,24 @@ class SudokuBoard:
             [0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0]]          
+    
+
+    def printBoard(self):
+        """
+            This method prints the board with the standard Sudoku format.
+        """
+        for i in range(9):
+            if i%3 == 0 and i != 0:
+                print("- - - - - - - - - - - - ")
+            for j in range(9):
+                if j%3 == 0 and j != 0:
+                    print(" | ", end="")
+                if j == 8:
+                    print(self.board[i][j])
+                else:
+                    print(str(self.board[i][j]) + " ", end="")
+
+
     
     def __findEmptySpace(self, board=None, emptySpace=None):
         """
@@ -259,21 +278,6 @@ class SudokuBoard:
         
         # Return the number of unique solutions
         return list(set(list_of_solutions))
-
-    def printBoard(self):
-        """
-            This method prints the board with the standard Sudoku format.
-        """
-        for i in range(9):
-            if i%3 == 0 and i != 0:
-                print("- - - - - - - - - - - - - ")
-            for j in range(9):
-                if j%3 == 0 and j != 0:
-                    print(" | ", end="")
-                if j == 8:
-                    print(self.board[i][j])
-                else:
-                    print(str(self.board[i][j]) + " ", end="")
     
 
     def boardAsString(self):
