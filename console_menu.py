@@ -2,6 +2,10 @@ from sudokuBoard import SudokuBoard
 import os
 
 def printHeader():
+    """"
+        This method prints a header
+    """
+
     print("SUDOKU BOARD SOLVER AND GENERATOR")
     print("By Pedro Hernández\n")
     print("| -------------------------------------------------- |")
@@ -9,13 +13,23 @@ def printHeader():
     print("| Portfolio (Spanish): https://pedro-hdez.github.io/ |")
     print("| -------------------------------------------------- |\n\n")
 
+
 def clearConsole():
+    """
+        This method clears the console
+    """
+
     command = 'clear'
     if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
         command = 'cls'
     os.system(command)
 
+
 def showMenu():
+    """
+        This method show the main menu and perform the user input validation
+    """
+
     printHeader()
 
     print("Which action do you like to perform?")
@@ -47,15 +61,23 @@ def showMenu():
 
     return usr_input
 
+
 def solveSudokuCase():
+    """
+        This method requests a sudoku in string format, solves it and prints it, as well as performs 
+        the user input validation
+    """
+
     print("SOLVE A SUDOKU\n\n")
     print("Please, write the 81 cell values below (Remember, empty cells are represented by 0)\n")
 
     valid_input = False
     while not valid_input:
         boardAsString = input(": ")
+        
         charCounter = 0
         for c in boardAsString:
+            # Checking input only contains digits and not letters or another symbols
             try:
                 int(c)
                 charCounter += 1
@@ -63,6 +85,7 @@ def solveSudokuCase():
                 print("Error. Input must contain only digits. Please, try again.\n")    
                 break
         
+        #Checking if input length is correct
         if charCounter != 81:
             print("Error. Input length must have a length of 81 characters. Please, try again.\n")
             continue
@@ -77,7 +100,11 @@ def solveSudokuCase():
     b.printBoard()
     input("\nPress a key to return to the main menu...")
 
+
 def generateNewBoardCase():
+    """
+        This method generates a new board. It requests the number of empty spaces and validates it.
+    """
     print("GENERATE NEW BOARD\n\n")
     valid_input = False
     emptySpaces = 0
@@ -86,13 +113,13 @@ def generateNewBoardCase():
         # Checking if user input is a number
         try:
             emptySpaces = int(emptySpaces)
-            # Checking if user input is 1 or 2
-            if emptySpaces < 0 or emptySpaces > 60:
+            # Checking if user input is within valid range
+            if emptySpaces < 0 or emptySpaces > 50:
                 raise Exception
             
             valid_input = True
         except:
-            print("Error, invalid input. Please, type a number in the range (0-60) and try again.")
+            print("Error, invalid input. Please, type a number in the range (0-50) and try again.")
             continue
     
     b = SudokuBoard()
@@ -109,7 +136,11 @@ def generateNewBoardCase():
     
     input("\nPress a key to return to the main menu...")
 
+
 def readInstructionsCase():
+    """
+        This method prints the program's instructions.
+    """
     printHeader()
 
     print("INSTRUCTIONS\n")
@@ -140,8 +171,6 @@ def readInstructionsCase():
 
 
     input("\nPress a key to return to the main menu...")
-
-
 
 
 if __name__ == "__main__":
