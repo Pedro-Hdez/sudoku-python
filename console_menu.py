@@ -19,7 +19,6 @@ __version__ = '1.0.0'
 __maintainer__ = 'Pedro Hernández'
 __email__ = 'pedro.a.hdez.a@gmail.com'
 __status__ = "Data Science's Master student"
-__
 
 
 def printHeader():
