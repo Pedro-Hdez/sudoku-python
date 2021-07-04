@@ -1,5 +1,26 @@
-from sudokuBoard import SudokuBoard
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+This script contains the necesary methods to run the Sudoku Board Solver and Generator console
+application.
+"""
+
+# Generic/Built-in Imports
 import os
+
+# Own modules
+from sudokuBoard import SudokuBoard
+
+__author__ = 'Pedro Hernández'
+__copyright__ = 'Copyright 2021, Sudoku Board Solver and Generator'
+__credits__ = ['Pedro Hernández']
+__version__ = '1.0.0'
+__maintainer__ = 'Pedro Hernández'
+__email__ = 'pedro.a.hdez.a@gmail.com'
+__status__ = "Data Science's Master student"
+__
+
 
 def printHeader():
     """"

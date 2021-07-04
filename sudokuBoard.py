@@ -1,5 +1,22 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+This script contains the <SudokuBoard> class and its methods. This module can be used to solve and
+generate ready-to-play Sudoku Board.
+"""
+
+# Generic/Built-in Imports
 import copy
 import random
+
+__author__ = 'Pedro Hernández'
+__copyright__ = 'Copyright 2021, Sudoku Board Solver and Generator'
+__credits__ = ['Pedro Hernández']
+__version__ = '1.0.0'
+__maintainer__ = 'Pedro Hernández'
+__email__ = 'pedro.a.hdez.a@gmail.com'
+__status__ = "Data Science's Master student"
 
 class SudokuBoard:
     def __init__(self, board=None):
